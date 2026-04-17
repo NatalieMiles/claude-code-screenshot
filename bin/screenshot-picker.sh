@@ -5,8 +5,11 @@
 # so the caller can present them cleanly instead of a generic "shell failed".
 set -uo pipefail
 
-OUTDIR="/tmp/claude-screenshots"
+OUTDIR="$HOME/Library/Caches/claude-code-screenshot"
 mkdir -p "$OUTDIR"
+# User-only perms — the directory holds screenshots that may contain
+# sensitive on-screen content, so other local accounts shouldn't read it.
+chmod 700 "$OUTDIR" 2>/dev/null || true
 
 # Enumerator output is tab-separated: <ID>\t<DISPLAY_STRING> per line.
 # IDs: "s1".."sN" (screens), "w<id>" (windows), "HEADER" (dividers).

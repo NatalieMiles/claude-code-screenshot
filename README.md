@@ -85,7 +85,7 @@ If you skip this, the picker still appears, but the capture fails with a clear `
 |---|---|---|
 | 1. Enumerate | `list-capture-targets.swift` | Calls `CGGetActiveDisplayList` for screens and `CGWindowListCopyWindowInfo` for visible windows. Outputs one line per target with a stable ID. |
 | 2. Pick | `osascript choose from list` | macOS's built-in modal picker — scrollable, keyboard-navigable, returns the chosen label. |
-| 3. Capture | `screencapture -l <windowID>` or `screencapture -D <displayIndex>` | Headless capture of the chosen target. Writes a PNG to `/tmp/claude-screenshots/`. |
+| 3. Capture | `screencapture -l <windowID>` or `screencapture -D <displayIndex>` | Headless capture of the chosen target. Writes a PNG to `~/Library/Caches/claude-code-screenshot/` (mode 700 — readable only by you). |
 | 4. Attach | Claude Code's `Read` tool | Reads the PNG into the conversation. |
 
 ## Tradeoffs

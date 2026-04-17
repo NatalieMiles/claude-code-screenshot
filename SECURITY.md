@@ -23,11 +23,11 @@ Everything in this codebase has been audited against that threat model.
 
 | ID | Severity | Issue | Status | Fix |
 |---|---|---|---|---|
-| L1 | Low | PNG output directory is `/tmp/claude-screenshots/` which is world-readable on the Mac. Captures of sensitive content can be read by other local users on multi-user systems. | **Open** | Change `OUTDIR` in `screenshot-picker.sh` to `"$HOME/Library/Caches/claude-code-screenshot"` (user-only readable). One-line change + doc update. |
-| L2 | Low (UX, not security) | Two captures within the same second overwrite each other (timestamp resolution = 1 second). | **Open** | Append `$$` (process ID) or milliseconds to the filename: `ss-$(date +%Y%m%d-%H%M%S)-$$.png`. |
-| L3 | Low | `install.sh` silently overwrites existing files in `~/.claude/`, which could clobber a user's customizations. | **Open** | Add a `[y/N]` confirmation prompt when destination files already exist. |
+| L1 | Low | PNG output directory was `/tmp/claude-screenshots/` which is world-readable on the Mac. Captures of sensitive content could be read by other local users on multi-user systems. | **Fixed** | Moved `OUTDIR` in `screenshot-picker.sh` to `$HOME/Library/Caches/claude-code-screenshot` and applied `chmod 700` on creation. User-only readable. |
+| L2 | Low (UX, not security) | Two captures within the same second overwrote each other (timestamp resolution = 1 second). | **Fixed** | Output filename now appends `$RANDOM` alongside the timestamp: `ss-YYYYMMDD-HHMMSS-$RANDOM.png`. Collision-proof at human-scale capture rates. |
+| L3 | Low | `install.sh` silently overwrote existing files in `~/.claude/`, which could clobber a user's customizations. | **Fixed** | Installer now lists every destination that would be overwritten and prompts `[y/N]` before proceeding. Aborts in non-TTY contexts unless `FORCE=1` is set. |
 
-**No critical, high, or medium findings.**
+**No critical, high, or medium findings. All low findings closed.**
 
 ## What was confirmed safe
 
@@ -36,9 +36,9 @@ Everything in this codebase has been audited against that threat model.
 - ✅ **No privilege escalation** — runs as the invoking user, no `sudo`, no setuid
 - ✅ **No `eval` or dynamically constructed commands** — every command path is literal
 - ✅ **No `curl | bash`** in `install.sh` — copies local files only
-- ✅ **AppleScript injection blocked** — window titles flowing into `osascript` have `\` and `"` escaped via `awk`. Bash variable expansion is one-pass and does not re-trigger command substitution on expanded values, so `$(...)` inside a malicious title is passed as a literal string to AppleScript, where it has no shell-execution meaning.
-- ✅ **`screencapture` argument injection blocked** — the user's chosen label is passed through `grep -oE '^\[(s|w)[0-9]+\]'` and then `[[ "$ID" =~ ^s([0-9]+)$ ]]`, ensuring only digits reach `screencapture -D` / `-l`.
-- ✅ **No symlink-attack window** — `/tmp/claude-screenshots/` is created and owned by the invoking user; the sticky bit on `/tmp` prevents same-host attackers from substituting the directory.
+- ✅ **AppleScript injection blocked** — window titles flowing into `osascript` have `\` and `"` escaped via `awk` before being interpolated into the `choose from list` payload. Bash variable expansion is one-pass and does not re-trigger command substitution on expanded values, so `$(...)` inside a malicious title is passed as a literal string to AppleScript, where it has no shell-execution meaning.
+- ✅ **`screencapture` argument injection blocked** — the enumerator emits IDs in a tab-separated first column (`s1`..`sN`, `w<digits>`, or `HEADER`) that never mixes with window titles. After the user picks a display string, bash looks up the ID via `awk -F'\t' '$2 == want {print $1}'`, then validates with `[[ "$ID" =~ ^s([0-9]+)$ ]]` / `^w([0-9]+)$` before passing the matched digits to `screencapture -D` / `-l`. A window title cannot reach the ID column.
+- ✅ **No symlink-attack window** — `$HOME/Library/Caches/claude-code-screenshot/` is created with `mkdir -p` then `chmod 700`, so it's owned by the invoking user with no other-user access. An attacker on the same Mac would need to already control the user's HOME to substitute the directory.
 
 ## Methodology
 
