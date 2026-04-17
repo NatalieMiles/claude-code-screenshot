@@ -41,7 +41,7 @@ if [ -z "$ID" ]; then
     exit 0
 fi
 
-OUTFILE="$OUTDIR/ss-$(date +%Y%m%d-%H%M%S).png"
+OUTFILE="$OUTDIR/ss-$(date +%Y%m%d-%H%M%S)-$RANDOM.png"
 SC_ERR=""
 
 if [[ "$ID" =~ ^s([0-9]+)$ ]]; then

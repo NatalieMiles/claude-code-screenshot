@@ -33,14 +33,23 @@ for window in windowList {
     let ownerName = window[kCGWindowOwnerName as String] as? String ?? "Unknown"
     let windowName = (window[kCGWindowName as String] as? String) ?? ""
 
+    var boundsHint = ""
     if let bounds = window[kCGWindowBounds as String] as? [String: CGFloat] {
         let w = bounds["Width"] ?? 0
         let h = bounds["Height"] ?? 0
+        let x = bounds["X"] ?? 0
+        let y = bounds["Y"] ?? 0
         if w < 80 || h < 80 { continue }
+        boundsHint = "\(Int(w))×\(Int(h)) @ \(Int(x)),\(Int(y))"
     }
 
     let frontTag = (ownerName == frontmostApp && shown == 0) ? " ★" : ""
-    let title = windowName.isEmpty ? ownerName : "\(ownerName) — \(windowName)"
+    let title: String
+    if windowName.isEmpty {
+        title = boundsHint.isEmpty ? ownerName : "\(ownerName) — \(boundsHint)"
+    } else {
+        title = "\(ownerName) — \(windowName)"
+    }
     print("  [w\(windowID)]\(frontTag) \(title)")
     shown += 1
 }

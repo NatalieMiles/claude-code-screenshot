@@ -58,8 +58,7 @@ See `Projects 🧩/claude-code-screenshot.md` for the active checklist. Summary:
 - [ ] Submit awesome-claude-code PR (draft already in repo)
 
 ## Known limitations
-- Window titles are blank without Screen Recording permission — Quartz returns `nil` for `kCGWindowName` until granted
-- Two captures within the same second overwrite each other (timestamp resolution)
+- Window titles are blank without Screen Recording permission — Quartz returns `nil` for `kCGWindowName` until granted (enumerator falls back to `WxH @ x,y` bounds so untitled windows are still distinguishable)
 - macOS only
 
 ## Useful commands
