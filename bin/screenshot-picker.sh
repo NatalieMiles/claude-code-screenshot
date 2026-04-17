@@ -74,4 +74,12 @@ if [ ! -f "$OUTFILE" ]; then
     exit 0
 fi
 
+# Strip the leading type marker (🖥/★/▫️) before printing the label so the
+# ack line reads cleanly — the marker is a picker-only visual cue.
+CLEAN_LABEL="$CHOSEN"
+CLEAN_LABEL="${CLEAN_LABEL#🖥  }"
+CLEAN_LABEL="${CLEAN_LABEL#★  }"
+CLEAN_LABEL="${CLEAN_LABEL#▫️  }"
+
+echo "CAPTURED: $CLEAN_LABEL"
 echo "$OUTFILE"

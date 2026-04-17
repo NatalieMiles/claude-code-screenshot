@@ -30,7 +30,7 @@ for (index, display) in displays.enumerated() {
     let h = Int(bounds.height)
     let mainTag = display == mainDisplay ? " [main]" : ""
     let name = screenByID[display]?.localizedName ?? "Screen \(index + 1)"
-    print("s\(index + 1)\t\(name) — \(w)×\(h)\(mainTag)")
+    print("s\(index + 1)\t🖥  \(name) — \(w)×\(h)\(mainTag)")
 }
 
 // --- WINDOWS ---
@@ -61,14 +61,14 @@ for window in windowList {
         boundsHint = "\(Int(w))×\(Int(h)) @ \(Int(x)),\(Int(y))"
     }
 
-    let frontTag = (ownerName == frontmostApp && shown == 0) ? "★ " : ""
+    let marker = (ownerName == frontmostApp && shown == 0) ? "★ " : "▫️ "
     let title: String
     if windowName.isEmpty {
         title = boundsHint.isEmpty ? ownerName : "\(ownerName) — \(boundsHint)"
     } else {
         title = "\(ownerName) — \(windowName)"
     }
-    print("w\(windowID)\t\(frontTag)\(title)")
+    print("w\(windowID)\t\(marker) \(title)")
     shown += 1
 }
 

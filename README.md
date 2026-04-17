@@ -14,23 +14,25 @@ Claude Code already supports `Ctrl+V` to paste images from the clipboard. That's
 
 ## How it works
 
-Run `/screenshot` in Claude Code. A native macOS dialog appears listing every screen and every visible window:
+Run `/screenshot` in Claude Code. A native macOS dialog appears listing every screen and every visible window, grouped by type:
 
 ```
-┌─ Capture target ─────────────────────┐
-│ [s1] Screen 1 — 2560×1440 [main]     │
-│ [s2] Screen 2 — 1920×1080            │
-│ [s3] Screen 3 — 2560×1440            │
-│ [w3308] ★ Terminal                   │
-│ [w589]  ChatGPT                      │
-│ [w1637] Obsidian — Daily Note        │
-│ [w224]  Google Chrome — Calendar     │
-│ ...                                  │
-│            [Cancel]   [Capture]      │
-└──────────────────────────────────────┘
+┌─ Capture target ───────────────────────────────┐
+│ ─── SCREENS ───                                │
+│ 🖥  LG SDQHD (1) — 2560×1440 [main]            │
+│ 🖥  VX2485 Series — 1920×1080                  │
+│ 🖥  LG SDQHD (2) — 2560×1440                   │
+│ ─── WINDOWS ───                                │
+│ ★  Terminal — Test Claude Code screenshot...   │
+│ ▫️  ChatGPT — ChatGPT                          │
+│ ▫️  Obsidian — Daily Note                      │
+│ ▫️  Google Chrome — Calendar                   │
+│ ...                                            │
+│              [Cancel]   [Capture]              │
+└────────────────────────────────────────────────┘
 ```
 
-Pick one → it captures instantly → the PNG is attached to the conversation. The `★` marks the frontmost window.
+Pick one → it captures instantly → Claude prints a short `Captured <target>` acknowledgement back in the conversation. Markers: `🖥` = screen, `★` = frontmost window, `▫️` = other windows. Screen entries use each display's actual model name (via `NSScreen.localizedName`), so users with multiple monitors can tell them apart.
 
 ## Usage
 
@@ -89,7 +91,7 @@ If you skip this, the picker still appears, but the capture fails with a clear `
 ## Tradeoffs
 
 - **macOS only.** The whole UX rests on macOS's native picker dialog and `screencapture`'s window-by-ID flag. Generalizing to Linux (`slurp`/`grim`) or Windows would mean a different dialog mechanism per platform — losing the "one tool, one UX" benefit.
-- **Window titles depend on Screen Recording permission.** Without it, you get `[w1637] Obsidian` instead of `[w1637] Obsidian — Daily Note.md`. Apps you have multiple windows of (Chrome especially) become hard to disambiguate.
+- **Window titles depend on Screen Recording permission.** Without it, you get `Obsidian` instead of `Obsidian — Daily Note.md`. The enumerator falls back to showing window bounds (`Google Chrome — 1440×900 @ 100,0`) so multiple untitled windows of the same app stay distinguishable, but full titles are still better.
 - **Not a replacement for `Ctrl+V`.** That flow is still better for ad-hoc clipboard pastes, design mockups dragged in from Figma, etc. Use this one when you're capturing live screen state.
 
 ## Compatibility
