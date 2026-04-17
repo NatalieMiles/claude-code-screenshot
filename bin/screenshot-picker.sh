@@ -8,23 +8,29 @@ set -uo pipefail
 OUTDIR="/tmp/claude-screenshots"
 mkdir -p "$OUTDIR"
 
-TARGETS=$(swift "$HOME/.claude/bin/list-capture-targets.swift" 2>/dev/null | grep -E '^[[:space:]]*\[(s|w)' | sed 's/^[[:space:]]*//' || true)
+# Enumerator output is tab-separated: <ID>\t<DISPLAY_STRING> per line.
+# IDs: "s1".."sN" (screens), "w<id>" (windows), "HEADER" (dividers).
+RAW=$(swift "$HOME/.claude/bin/list-capture-targets.swift" 2>/dev/null || true)
 
-if [ -z "$TARGETS" ]; then
+if [ -z "$RAW" ]; then
     echo "ERROR: No capture targets found (swift enumerator failed or returned nothing)"
     exit 0
 fi
 
-LIST_AS=$(printf '%s\n' "$TARGETS" | awk '{
-    gsub(/\\/, "\\\\");
-    gsub(/"/, "\\\"");
-    printf "\"%s\",", $0
+# Build the osascript list from the display column only.
+LIST_AS=$(printf '%s\n' "$RAW" | awk -F'\t' 'NF==2 {
+    s = $2
+    gsub(/\\/, "\\\\", s)
+    gsub(/"/, "\\\"", s)
+    printf "\"%s\",", s
 }' | sed 's/,$//')
 
-DEFAULT=$(printf '%s\n' "$TARGETS" | head -1 | awk '{
-    gsub(/\\/, "\\\\");
-    gsub(/"/, "\\\"");
-    print
+# Default selection = first non-header row.
+DEFAULT=$(printf '%s\n' "$RAW" | awk -F'\t' '$1 != "HEADER" && NF==2 {
+    s = $2
+    gsub(/\\/, "\\\\", s)
+    gsub(/"/, "\\\"", s)
+    print s; exit
 }')
 
 CHOSEN=$(osascript -e "choose from list {$LIST_AS} with prompt \"Capture target\" default items {\"$DEFAULT\"} OK button name \"Capture\" cancel button name \"Cancel\"" 2>/dev/null || true)
@@ -34,10 +40,16 @@ if [ "$CHOSEN" = "false" ] || [ -z "$CHOSEN" ]; then
     exit 0
 fi
 
-ID=$(printf '%s' "$CHOSEN" | grep -oE '^\[(s|w)[0-9]+\]' | tr -d '[]' || true)
+# Map the chosen display string back to its ID.
+ID=$(printf '%s\n' "$RAW" | awk -F'\t' -v want="$CHOSEN" '$2 == want {print $1; exit}')
+
+if [ "$ID" = "HEADER" ]; then
+    echo "ERROR: You picked a section divider — pick a screen or window instead and try again."
+    exit 0
+fi
 
 if [ -z "$ID" ]; then
-    echo "ERROR: Could not parse ID from selection: $CHOSEN"
+    echo "ERROR: Could not match selection back to an ID: $CHOSEN"
     exit 0
 fi
 

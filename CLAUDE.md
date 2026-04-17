@@ -19,7 +19,7 @@ A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/cl
 ```
 .
 ├── bin/
-│   ├── list-capture-targets.swift   # enumerator → outputs `[s1] / [w12345] label` lines
+│   ├── list-capture-targets.swift   # enumerator → outputs tab-separated `<id>\t<display>` lines (ID hidden from UI)
 │   └── screenshot-picker.sh         # orchestrator → enumerate → osascript picker → screencapture
 ├── commands/
 │   └── screenshot.md                # the slash command (frontmatter + 3 steps)

@@ -2,30 +2,48 @@
 import Cocoa
 import CoreGraphics
 
+// Emits tab-separated lines: <ID>\t<DISPLAY_STRING>
+//   ID = "s1".."sN" for screens (1-based, matches `screencapture -D`)
+//        "w<windowID>" for windows (matches `screencapture -l`)
+//        "HEADER" for section dividers (not selectable targets)
+// The bash picker reads the ID column for lookup and shows only the
+// display column to the user, so CoreGraphics IDs never leak into the UI.
+
+// --- SCREENS ---
 var displayCount: UInt32 = 0
 CGGetActiveDisplayList(0, nil, &displayCount)
 var displays = [CGDirectDisplayID](repeating: 0, count: Int(displayCount))
 CGGetActiveDisplayList(displayCount, &displays, &displayCount)
 let mainDisplay = CGMainDisplayID()
 
-print("SCREENS")
-for (index, display) in displays.enumerated() {
-    let bounds = CGDisplayBounds(display)
-    let mainTag = display == mainDisplay ? " [main]" : ""
-    let w = Int(bounds.width)
-    let h = Int(bounds.height)
-    print("  [s\(index + 1)] Screen \(index + 1) — \(w)×\(h)\(mainTag)")
+var screenByID: [CGDirectDisplayID: NSScreen] = [:]
+for screen in NSScreen.screens {
+    if let num = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber {
+        screenByID[CGDirectDisplayID(num.uint32Value)] = screen
+    }
 }
 
+print("HEADER\t─── SCREENS ───")
+for (index, display) in displays.enumerated() {
+    let bounds = CGDisplayBounds(display)
+    let w = Int(bounds.width)
+    let h = Int(bounds.height)
+    let mainTag = display == mainDisplay ? " [main]" : ""
+    let name = screenByID[display]?.localizedName ?? "Screen \(index + 1)"
+    print("s\(index + 1)\t\(name) — \(w)×\(h)\(mainTag)")
+}
+
+// --- WINDOWS ---
 let frontmostApp = NSWorkspace.shared.frontmostApplication?.localizedName ?? ""
 
 let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
 guard let windowList = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
-    print("\nWINDOWS\n  (unable to enumerate — Screen Recording permission may be required)")
+    print("HEADER\t─── WINDOWS ───")
+    print("HEADER\t(unable to enumerate — Screen Recording permission may be required)")
     exit(0)
 }
 
-print("\nWINDOWS")
+print("HEADER\t─── WINDOWS ───")
 var shown = 0
 for window in windowList {
     guard let layer = window[kCGWindowLayer as String] as? Int, layer == 0 else { continue }
@@ -43,17 +61,17 @@ for window in windowList {
         boundsHint = "\(Int(w))×\(Int(h)) @ \(Int(x)),\(Int(y))"
     }
 
-    let frontTag = (ownerName == frontmostApp && shown == 0) ? " ★" : ""
+    let frontTag = (ownerName == frontmostApp && shown == 0) ? "★ " : ""
     let title: String
     if windowName.isEmpty {
         title = boundsHint.isEmpty ? ownerName : "\(ownerName) — \(boundsHint)"
     } else {
         title = "\(ownerName) — \(windowName)"
     }
-    print("  [w\(windowID)]\(frontTag) \(title)")
+    print("w\(windowID)\t\(frontTag)\(title)")
     shown += 1
 }
 
 if shown == 0 {
-    print("  (no windows visible — try opening apps first)")
+    print("HEADER\t(no windows visible — try opening apps first)")
 }
