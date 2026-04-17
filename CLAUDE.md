@@ -26,6 +26,7 @@ A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/cl
 ├── install.sh                       # copies files to ~/.claude/{bin,commands}
 ├── uninstall.sh                     # removes the installed files
 ├── README.md                        # public-facing pitch + install + tradeoffs
+├── SECURITY.md                      # threat model, audit findings (L1/L2/L3 open), confirmed-safe list
 ├── LICENSE                          # MIT
 └── AWESOME-CLAUDE-CODE-PR.md        # draft PR for awesome-claude-code submission
 ```
@@ -37,7 +38,7 @@ A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/cl
 | Use `osascript choose from list` for the picker | Unlimited items, scrollable, native macOS UX. Closest match to ChatGPT's picker. | `AskUserQuestion` (Claude Code's built-in) — capped at 4 options; couldn't fit screens + windows |
 | Use `screencapture -l <windowID>` for window capture | Headless, no crosshair, works for any visible window | `screencapture -i` (interactive crosshair) — defeats the "no leaving terminal" goal |
 | macOS-only, by design | The unified-picker UX depends on `osascript`. Generalizing to Linux (`slurp`) or Windows would mean different mechanisms per platform — losing the one-tool-one-UX benefit | Cross-platform shim with per-OS branching |
-| Output to `/tmp/claude-screenshots/` | Auto-cleared by macOS, no clutter | `~/Library/Caches/...` — better privacy on multi-user systems (open improvement; see security review) |
+| Output to `/tmp/claude-screenshots/` | Auto-cleared by macOS, no clutter | `~/Library/Caches/...` — better privacy on multi-user systems (open improvement L1; see [SECURITY.md](SECURITY.md)) |
 | Always exit 0 from `screenshot-picker.sh`; surface errors via stdout strings | Claude Code shows generic "shell command failed" on non-zero exit. Stdout strings let the slash command relay specific errors. | Use exit codes — but Claude Code's error UX hides the message |
 | Require Screen Recording permission for the *terminal*, not the script | macOS Sequoia routes `screencapture -l/-D` through ScreenCaptureKit, which checks the *calling process*'s permission. Documented in README. | Sign + notarize a custom binary — too much overhead for a personal tool |
 
