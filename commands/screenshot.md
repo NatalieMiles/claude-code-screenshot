@@ -1,10 +1,10 @@
 ---
-description: Take a screenshot via native macOS picker (all screens + windows in one list)
-argument-hint: [optional note about what's in the screenshot]
+description: Take a screenshot via native macOS picker and attach it to the conversation
+argument-hint: [optional question about the screenshot]
 allowed-tools: Bash(~/.claude/bin/screenshot-picker.sh:*), Read
 ---
 
-Take a screenshot using the native macOS picker. The picker shows all 3 screens and every visible window in one scrollable dialog — pick one, capture happens automatically, no crosshair, no leaving the terminal.
+Capture a screenshot via a native macOS picker (all screens + every visible window in one scrollable list) and attach it to the conversation. After capture, treat the image exactly as if the user had drag-dropped it — Read it, then respond based on their intent.
 
 Step 1 — show the picker and capture.
 
@@ -13,8 +13,12 @@ Step 1 — show the picker and capture.
 Step 2 — handle the result above:
 - `CANCELLED` → tell the user the capture was cancelled and stop.
 - `ERROR: ...` → relay the error to the user and stop.
-- Otherwise the output is an absolute path to a PNG — hold onto it for step 3.
+- Otherwise the output has two lines: `CAPTURED: <label>` (what the user picked) and an absolute path to the PNG.
 
-Step 3 — respond based on context:
-- If `$ARGUMENTS` was passed, Read the PNG with the Read tool and treat `$ARGUMENTS` as the user's question/request about the screenshot.
-- Otherwise, do NOT Read the PNG yet. Reply with a one-line acknowledgement naming the file (e.g. "Captured `ss-20260417-143022.png`. What would you like me to do with it?") and stop. On the user's next message, Read the PNG and respond with their context in mind.
+Step 3 — Read the PNG with the Read tool, then respond as you would to a drag-dropped image:
+
+- **If `$ARGUMENTS` is non-empty** → treat it as the user's question/request about the image and answer directly.
+- **Else if the conversation already has context** that makes the user's intent obvious (e.g. they're mid-debug, asking about a UI issue, reviewing a design) → act on that context.
+- **Else** → briefly describe what's in the image in one or two sentences and stop. No trailing question, no prompt for input.
+
+In all cases, lead with a short acknowledgement that names what was captured (e.g. "Captured Obsidian window.") before the substantive response.

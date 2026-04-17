@@ -22,7 +22,7 @@ A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/cl
 │   ├── list-capture-targets.swift   # enumerator → outputs tab-separated `<id>\t<display>` lines (ID hidden from UI)
 │   └── screenshot-picker.sh         # orchestrator → enumerate → osascript picker → screencapture
 ├── commands/
-│   └── screenshot.md                # the slash command (frontmatter + 3 steps)
+│   └── screenshot.md                # the slash command — captures, always Reads, responds like drag-drop
 ├── install.sh                       # copies files to ~/.claude/{bin,commands}
 ├── uninstall.sh                     # removes the installed files
 ├── README.md                        # public-facing pitch + install + tradeoffs

@@ -32,6 +32,17 @@ Run `/screenshot` in Claude Code. A native macOS dialog appears listing every sc
 
 Pick one → it captures instantly → the PNG is attached to the conversation. The `★` marks the frontmost window.
 
+## Usage
+
+```
+/screenshot                                 # pick target, capture, Claude Reads + responds to context
+/screenshot what's wrong with this error?   # same, but answer a specific question
+```
+
+`/screenshot` behaves exactly like **drag-dropping an image** into the conversation: Claude Reads it and responds based on whatever context the conversation has — any question you passed as `$ARGUMENTS`, or the thread you're already in (mid-debug, reviewing a design, etc.). If neither applies, Claude gives a brief one-line description.
+
+**Token cost per capture:** ~$0.01–0.07 depending on image size and model (roughly `pixels / 750` image tokens). If you need to capture *without* spending tokens (save the PNG for later), use `screencapture -i` directly from a shell — this command is purpose-built for "get the image in front of Claude now."
+
 ## Install
 
 ```bash
