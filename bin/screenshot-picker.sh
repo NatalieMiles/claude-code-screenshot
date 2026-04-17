@@ -8,7 +8,7 @@ set -uo pipefail
 OUTDIR="/tmp/claude-screenshots"
 mkdir -p "$OUTDIR"
 
-TARGETS=$(swift "$HOME/.claude/bin/list-capture-targets.swift" 2>/dev/null | grep -E '^\s*\[(s|w)' | sed 's/^\s*//' || true)
+TARGETS=$(swift "$HOME/.claude/bin/list-capture-targets.swift" 2>/dev/null | grep -E '^[[:space:]]*\[(s|w)' | sed 's/^[[:space:]]*//' || true)
 
 if [ -z "$TARGETS" ]; then
     echo "ERROR: No capture targets found (swift enumerator failed or returned nothing)"
