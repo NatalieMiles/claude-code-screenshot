@@ -99,3 +99,7 @@ Issues and PRs welcome. Most likely directions:
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## About
+
+Built by [Natalie Miles](https://nataliemiles.me/) — a product manager who writes code on the side. Find more at [nataliemiles.me](https://nataliemiles.me/) or [LinkedIn](https://www.linkedin.com/in/natalieamiles).
