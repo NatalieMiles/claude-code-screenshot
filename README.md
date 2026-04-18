@@ -61,13 +61,21 @@ The installer copies three files into `~/.claude/`:
 
 ## Required: grant Screen Recording permission
 
-macOS Sequoia (15+) requires the calling process — your terminal — to have explicit Screen Recording permission for non-interactive `screencapture` flags (`-l <windowID>`, `-D <displayID>`).
+macOS Sequoia (15+) requires the calling process — whatever app is actually running Claude Code — to have explicit Screen Recording permission for non-interactive `screencapture` flags (`-l <windowID>`, `-D <displayID>`).
 
 1. **System Settings → Privacy & Security → Screen & System Audio Recording**
 2. Click the **`+`** button at the bottom of the list
-3. Press `Cmd+Shift+G`, type `/System/Applications/Utilities/Terminal.app` (or the path to your terminal — iTerm, Ghostty, etc.), press Enter, click **Open**
+3. Press `Cmd+Shift+G`, then paste the path for whichever app is running Claude Code:
+   - **Terminal.app:** `/System/Applications/Utilities/Terminal.app`
+   - **iTerm2:** `/Applications/iTerm.app`
+   - **Ghostty:** `/Applications/Ghostty.app`
+   - **Claude Code VS Code extension:** `/Applications/Visual Studio Code.app` (Visual Studio Code hosts the extension, so VS Code itself is the process macOS checks)
+
+   Press Enter, click **Open**.
 4. Toggle the entry **on**
-5. **Fully quit your terminal (`Cmd+Q`)** and reopen it. TCC permissions only attach when the process starts.
+5. **Fully quit that app (`Cmd+Q`)** and reopen it. TCC permissions only attach when the process starts.
+
+If you switch which app you run Claude Code in later, repeat for the new one — each app gets its own permission entry.
 
 If you skip this, the picker still appears, but the capture fails with a clear `PERMISSION_DENIED` message that tells you exactly what to do.
 
