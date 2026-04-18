@@ -1,16 +1,18 @@
 # claude-code-screenshot
 
-A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/claude-code) that captures any screen or window via a native macOS picker — no crosshair, no leaving the terminal.
+A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/claude-code) that lets you pick *exactly which* screen or window to send to Claude — from a native macOS menu listing every display and visible window on your Mac. No crosshair, no alt-tabbing, no leaving the terminal.
+
+Built for multi-monitor setups and window-heavy workflows where `Cmd+Shift+4` means seconds of hunting before you even start capturing.
 
 Inspired by ChatGPT desktop's "Take screenshot → pick a window" flow, ported to Claude Code's CLI.
 
-## Why
+## Why not just `Ctrl+V`?
 
-Claude Code already supports `Ctrl+V` to paste images from the clipboard. That's enough most of the time. This command is for the multi-monitor, multi-window cases where:
+Claude Code already supports `Ctrl+V` to paste images from the clipboard, and that's enough most of the time. Reach for `/screenshot` when:
 
-- You don't want to alt-tab to a region screenshotter, drag-select, then come back
+- You have 3+ monitors and need to send Claude *that specific* display without dragging across them
+- You have 12 Chrome windows open and want the *right* one (without getting it wrong on the first try)
 - You're capturing the *same* window repeatedly and want one keystroke instead of three
-- You have 3 monitors and need to specify *which* one without dragging across them
 
 ## How it works
 
