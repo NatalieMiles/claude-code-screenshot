@@ -115,7 +115,12 @@ If you skip this, the picker still appears, but the capture fails with a clear `
 
 ## Contributing
 
-Issues and PRs welcome. Most likely directions:
+Issues and PRs welcome. See the [open issues](https://github.com/NatalieMiles/claude-code-screenshot/issues) — a couple already have full design notes ready for a contributor to pick up:
+
+- **[#1](https://github.com/NatalieMiles/claude-code-screenshot/issues/1)** — Post-capture "add context" dialog for cases where the user's question only emerges after seeing the picker
+- **[#2](https://github.com/NatalieMiles/claude-code-screenshot/issues/2)** — Configurable retention period (currently hardcoded to 30 days of capture cache)
+
+Other likely directions (no design yet):
 
 - Filter or group windows by app when there are many of them
 - Optional Hammerspoon hotkey wrapper to invoke it without typing `/screenshot`
