@@ -115,10 +115,12 @@ If you skip this, the picker still appears, but the capture fails with a clear `
 
 ## Contributing
 
-Issues and PRs welcome. See the [open issues](https://github.com/NatalieMiles/claude-code-screenshot/issues) — a couple already have full design notes ready for a contributor to pick up:
+Issues and PRs welcome. See the [open issues](https://github.com/NatalieMiles/claude-code-screenshot/issues) — several already have full design notes ready for a contributor to pick up:
 
 - **[#1](https://github.com/NatalieMiles/claude-code-screenshot/issues/1)** — Post-capture "add context" dialog for cases where the user's question only emerges after seeing the picker
 - **[#2](https://github.com/NatalieMiles/claude-code-screenshot/issues/2)** — Configurable retention period (currently hardcoded to 30 days of capture cache)
+- **[#3](https://github.com/NatalieMiles/claude-code-screenshot/issues/3)** — Allow `/screenshot` to use a lighter model (Haiku/Sonnet) for the image Read, to reduce per-capture cost when the session model is Opus
+- **[#4](https://github.com/NatalieMiles/claude-code-screenshot/issues/4)** — Video/GIF capture with keyframe extraction, for showing Claude motion (animations, transitions, mid-scroll bugs) instead of just stills
 
 Other likely directions (no design yet):
 
