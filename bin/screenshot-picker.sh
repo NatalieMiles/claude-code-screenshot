@@ -13,7 +13,9 @@ chmod 700 "$OUTDIR" 2>/dev/null || true
 
 # Auto-delete captures older than 30 days so the cache doesn't grow forever.
 # macOS does not reliably clean ~/Library/Caches on its own.
-find "$OUTDIR" -name 'ss-*.png' -mtime +30 -delete 2>/dev/null || true
+# -type f restricts to regular files (defense-in-depth: skips symlinks even
+# if OUTDIR's perms ever loosen or the path moves to a shared location).
+find "$OUTDIR" -type f -name 'ss-*.png' -mtime +30 -delete 2>/dev/null || true
 
 # Enumerator output is tab-separated: <ID>\t<DISPLAY_STRING> per line.
 # IDs: "s1".."sN" (screens), "w<id>" (windows), "HEADER" (dividers).
