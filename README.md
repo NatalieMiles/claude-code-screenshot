@@ -6,6 +6,8 @@ Built for multi-monitor setups and window-heavy workflows where `Cmd+Shift+4` me
 
 Inspired by ChatGPT desktop's "Take screenshot → pick a window" flow, ported to Claude Code's CLI.
 
+![/screenshot demo: pick a window from a native macOS menu, capture flows directly into Claude](https://github.com/user-attachments/assets/8640888b-5a6a-4fd1-a47a-11b963df8632)
+
 ## Why not just `Ctrl+V`?
 
 Claude Code already supports `Ctrl+V` to paste images from the clipboard, and that's enough most of the time. Reach for `/screenshot` when:
