@@ -28,7 +28,7 @@ A `/screenshot` slash command for [Claude Code](https://github.com/anthropics/cl
 ├── README.md                        # public-facing pitch + install + tradeoffs
 ├── SECURITY.md                      # threat model, audit findings (all closed), confirmed-safe list
 ├── LICENSE                          # MIT
-└── AWESOME-CLAUDE-CODE-PR.md        # draft PR for awesome-claude-code submission
+└── AWESOME-CLAUDE-CODE-SUBMISSION.md  # copy-paste field values for the awesome-claude-code issue form (NOT a PR — their submissions are issue-form-only)
 ```
 
 ## Key decisions (and why)
